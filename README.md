@@ -15,7 +15,7 @@ Pages live in `content/` (`home.md`, `projects/`, `updates/`) and use Nuxt Conte
 
 ## Checks
 
-CI runs `pnpm generate` on every PR (`.github/workflows/ci.yml`). Lint and the Vitest suite are known to be broken until the Nuxt 4 / Content 3 upgrade.
+CI runs `pnpm lint`, `pnpm vitest run` and `pnpm generate` on every PR (`.github/workflows/ci.yml`).
 
 ## Deploy
 

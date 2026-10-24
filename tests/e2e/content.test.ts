@@ -1,23 +1,31 @@
-import { assert, describe, test } from 'vitest'
-import { $fetch, setup, useTestContext } from '@nuxt/test-utils'
-import { hash } from 'ohash'
+import { describe, expect, test } from 'vitest'
+import { $fetch, setup } from '@nuxt/test-utils/e2e'
 
-describe('Content Queries', async () => {
+describe('Content pages', async () => {
   await setup({
     server: true,
   })
-  const apiBaseUrl = useTestContext().options.nuxtConfig.content?.api?.baseURL || '/api/_content'
 
-  test('List contents', async () => {
-    const params = { only: '_id' }
-    const qid = hash(params)
-    const docs = await $fetch(`${apiBaseUrl}/query/${qid}`, {
-      params: { _params: JSON.stringify(params) },
-    })
+  test('home page renders the home content', async () => {
+    const html = await $fetch<string>('/')
+    expect(html).toContain('Tim King here')
+  })
 
-    const ids = docs.map((doc: any) => doc._id)
+  test('projects listing links to each project', async () => {
+    const html = await $fetch<string>('/projects')
+    for (const slug of ['crsn', 'king-cottage-cam', 'lake-gauge', 'sneaky-gift'])
+      expect(html).toContain(`href="/projects/${slug}"`)
+  })
 
-    assert(ids.length > 0)
-    assert(ids.includes('content:index.md'))
+  test('updates listing links to each update without the numeric prefix', async () => {
+    const html = await $fetch<string>('/updates')
+    for (const slug of ['initial-update', 'development-as-a-hobby', 'hosting-on-the-edge'])
+      expect(html).toContain(`href="/updates/${slug}"`)
+  })
+
+  test('an update page renders its title and body', async () => {
+    const html = await $fetch<string>('/updates/initial-update')
+    expect(html).toContain('First Post')
+    expect(html).toContain('central spot')
   })
 })

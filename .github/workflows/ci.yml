@@ -2,11 +2,6 @@ name: CI
 
 # Checks every PR before Tim merges. Merging to main deploys king.gdn through
 # Cloudflare Pages' Git integration.
-#
-# Only `generate` gates for now: lint (legacy .eslintrc mixed with the flat
-# config) and the Vitest suite (@nuxt/test-utils 3 on Vitest 2) were already
-# broken and get fixed in the Nuxt 4 / Content 3 upgrade. Add them back here
-# then.
 
 on:
   pull_request:
@@ -49,5 +44,9 @@ jobs:
           restore-keys: pnpm-store-${{ runner.os }}-
       - name: install
         run: pnpm install --frozen-lockfile --prefer-offline
+      - name: lint
+        run: pnpm lint
+      - name: test
+        run: pnpm vitest run
       - name: generate
         run: pnpm generate

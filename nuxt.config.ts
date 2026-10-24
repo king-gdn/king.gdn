@@ -3,7 +3,6 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/content',
     '@nuxtjs/color-mode',
-    'nuxt-time',
     'nuxt-og-image',
     '@nuxt/test-utils/module',
     '@nuxt/image',
@@ -34,13 +33,13 @@ export default defineNuxtConfig({
   },
   
   ogImage: {
-    debug: true,
     zeroRuntime: true,
     fonts: ['Arimo:400', 'Arimo:700'],
   },
+
   content: {
-    navigation: {
-      fields: ['author', 'publishedAt', 'posterImage'],
+    experimental: {
+      nativeSqlite: true,
     },
   },
 
@@ -56,5 +55,5 @@ export default defineNuxtConfig({
     url: 'https://king.gdn', // helps og-images be created
   },
 
-  compatibilityDate: '2024-10-11',
+  compatibilityDate: '2025-07-15',
 })

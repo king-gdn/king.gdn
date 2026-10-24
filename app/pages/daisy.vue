@@ -1,4 +1,5 @@
 <template>
+  <div class="contents">
   <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
     <button class="btn">
       Default
@@ -321,5 +322,6 @@
         </svg> <span>Error! Task failed successfully.</span>
       </div>
     </div>
+  </div>
   </div>
 </template>
