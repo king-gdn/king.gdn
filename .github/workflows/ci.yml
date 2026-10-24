@@ -1,0 +1,53 @@
+name: CI
+
+# Checks every PR before Tim merges. Merging to main deploys king.gdn through
+# Cloudflare Pages' Git integration.
+#
+# Only `generate` gates for now: lint (legacy .eslintrc mixed with the flat
+# config) and the Vitest suite (@nuxt/test-utils 3 on Vitest 2) were already
+# broken and get fixed in the Nuxt 4 / Content 3 upgrade. Add them back here
+# then.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '26.4.0'
+
+jobs:
+  generate:
+    name: generate
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+    # CI_RUNNER is the org-level variable for the LAN runner; unset falls back
+    # to GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      # pnpm/action-setup refuses 11.12.0 (its @pnpm/exe build is flagged
+      # broken); the npm package works.
+      - name: pnpm
+        run: |
+          npm install -g pnpm@11.12.0
+          echo "PNPM_STORE=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.PNPM_STORE }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
+      - name: install
+        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: generate
+        run: pnpm generate
