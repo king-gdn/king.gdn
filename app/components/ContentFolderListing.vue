@@ -3,11 +3,11 @@ import type { PickedChildDoc } from '~/composables/contentFolder'
 import { useContentFolderListing } from '~/composables/contentFolder'
 
 const props = defineProps<{
-  folderName: string
+  folderName: 'projects' | 'updates'
 }>()
 
 defineSlots<{
-  default(props: { data: PickedChildDoc }): any
+  default: (props: { data: PickedChildDoc }) => unknown
 }>()
 
 const listing = useContentFolderListing(props.folderName)

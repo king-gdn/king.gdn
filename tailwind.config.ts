@@ -44,7 +44,7 @@ export const themes = [
 ]
 
 module.exports = {
-  content: [],
+  content: ['./content/**/*.md'],
   theme: {
     extend: {
       typography: {

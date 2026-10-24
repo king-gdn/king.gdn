@@ -15,6 +15,10 @@ defineOptions({
   inheritAttrs: false,
 })
 
+const formattedDate = computed(() =>
+  new Date(props.publishedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+)
+
 const shouldShowImage = computed(() => {
   return (props.posterImage !== undefined)
 })
@@ -33,7 +37,7 @@ const shouldShowImage = computed(() => {
           <span style="color: #399FB1;" class="font-bold">king</span>.gdn
         </p>
         <p class="text-3xl">
-          <NuxtTime :datetime="props.publishedAt" day="numeric" month="long" year="numeric" />
+          {{ formattedDate }}
         </p>
       </div>
       <div class="flex-1 flex-col justify-center">

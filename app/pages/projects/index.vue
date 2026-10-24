@@ -9,7 +9,7 @@
     <div class="grid auto-rows-fr md:grid-cols-2 w-full gap-3 md:gap-6">
       <ContentFolderListing v-slot="{ data }" folder-name="projects">
         <ProjectCard
-          v-for="link of data" :key="link._path" :path="link._path" :title="link.title"
+          v-for="link of data" :key="link.path" :path="link.path" :title="link.title"
           :published-at="link.publishedAt" :poster-image="link.posterImage"
         />
       </ContentFolderListing>
